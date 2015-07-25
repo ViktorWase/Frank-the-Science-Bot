@@ -14,6 +14,6 @@ def createSimpleDataSet( numOfAttr, numOfObj ):
         w.append(w[0]*3+random.gauss(0.0, 0.05))
         w.append(random.random()*6)
 
-        data.setAttributes([])
+        data.setAttributes(w)
         database.append(data)
     return database
