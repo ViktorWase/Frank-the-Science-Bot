@@ -11,28 +11,36 @@ from ann import *
 from dataObjectClass import *
 from scienceFunctions import *
 
+from simpleDatabase import *
 
-while(True):
+def Frank(database, tol):
+    exampleObj = database[0]
     #Generate a random function in the form of the parameters to an ANN which returns a single value.
-	weightsOld = randomHypothesis(len(exampleObj.attributes))
+    weightsOld = randomHypothesis(len(exampleObj.attributes))
 
-  	while(error < tol):
+    error = 100000000000000;
+    errorOld = error
+    while(error < tol):
+        weights = addRandomLittleJump(list(weightsOld))
+        error = 0
+        #Iterate through all the elements in the database and see if the
+        #ANN returns 0. Otherwise add the result to the error.
+        for obj in database:
+            error += someNorm(artificialNeuralNetwork(obj, weights))
 
-    	weights = addRandomLittleJump(list(weightsOld))
+        #Make sure it doesn't find conservation laws such as x-x=0.
+        error += c1*howMuchOfATautologyItIs(weights)
 
-    	error = 0
-    	#Iterate through all the elements in the database and see if the
-    	#ANN returns 0. Otherwise add the result to the error.
-    	for obj in database:
-    		error += someNorm(artificialNeuralNetwork(obj, weights))
+        if(error<errorOld):
+            errorOld = error
+            weightsOld = list(weights)
+            if(lawGoodEnough(database, weights)):
+                func = translateFromANN2RegularMath(weights)
+                return func
 
-    	#Make sure it doesn't find conservation laws such as x-x=0.
-    	error += c1*howMuchOfATautologyItIs(weights)
 
-    	if(error<errorOld):
-    		errorOld = error
-    		weightsOld = list(weights)
+database = createSimpleDataSet( 3, 20 )
 
-	if(lawGoodEnough(database, weights):
-    	func = translateFromANN2RegularMath(weights)
-    	return func
+tol = 0.5
+
+print Frank(database, tol)

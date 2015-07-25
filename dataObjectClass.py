@@ -5,8 +5,9 @@ class dataObject(object):
         The actual data is put in the attributes vector.
     """
     def __init__(self, numberOfAttributes):
-        self.attributes = [0.0]*numberOfattributes
+
+        self.attributes = [0.0]*numberOfAttributes
 
     def setAttributes(self, attributesIn):
         for index in range(len(attributesIn)):
-            self.attributes[index] = attributesIn[i]
+            self.attributes[index] = attributesIn[index]

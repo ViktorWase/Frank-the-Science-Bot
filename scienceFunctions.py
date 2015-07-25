@@ -1,3 +1,5 @@
+import random
+
 def someNorm(vector):
     """
         Lets go with the ordinary 2-norm.
@@ -17,7 +19,7 @@ def randomHypothesis(n):
     """
     out = [0.0]*(220+10*n)
     for index in range(len(out)):
-        if(random()<0.1):
+        if(random.random()<0.1):
             out[index] = 10.0*random.gauss(0.0,1.0)
     return out
 
