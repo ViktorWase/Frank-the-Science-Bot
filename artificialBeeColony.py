@@ -73,10 +73,6 @@ class Bee:
             self.valueOfBestFoodSource = valueOfNeighbour
             self.bestFoodSource = neighbour
 
-def test(w):
-    #THIS IS SHOULD BE A PROPER FITNESS FUNCTION! FIX!
-    return sum(abs(w))
-
 class Colony:
     """
         This is a colony of Bees.
