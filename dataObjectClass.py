@@ -1,4 +1,4 @@
-class dataObject(object):
+class dataObject:
     """
         Each of the data points in the database
         should be represented as one of these objects.
