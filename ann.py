@@ -1,5 +1,6 @@
 from random import random
 from math import fabs
+from math import exp
 
 import scienceFunctions
 
@@ -48,7 +49,7 @@ def artificialNeuralNetwork(obj, weights):
         Then there are a fuckbunch of floats that symbolize the actual
         parameters (or weights) of the neural network.
     """
-    oldLayer = list(obj.attributes)
+    oldLayer = list(obj)
 
     #Prepares the stuff for the network.
     hiddenLayers = weights[0]

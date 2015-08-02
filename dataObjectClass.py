@@ -14,7 +14,7 @@ class dataObject:
 
 class Database:
     """
-        A container class for the dataObjects
+        A container class for the dataObjects.
     """
     def __init__(self, database_in):
         self.datapoints = database_in

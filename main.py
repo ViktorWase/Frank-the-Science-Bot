@@ -10,6 +10,7 @@
 from ann import *
 from dataObjectClass import *
 from scienceFunctions import *
+from tautology import *
 
 from simpleDatabase import *
 
@@ -26,9 +27,9 @@ def lawGoodEnough(w, data, c2):
         c2 needs some serious tuning.
     """
     error = 0
-    for obj in data:
-        error += artificialNeuralNetwork(obj, w)**2
-    error = error / (float(len(data)))
+    for obj in data.datapoints:
+        error += artificialNeuralNetwork(obj.attributes, w)**2
+    error = error /data.numElements
     if error < c2:
         return True
     else:
@@ -39,23 +40,25 @@ def Frank(database, verificationDatabase, tol, c1, c2):
     #Generate a random function in the form of the parameters to an ANN which returns a single value.
     weightsOld = randomHypothesis(len(exampleObj.attributes), database)
 
-    error = 100000000000000;
+    error = 100000000000000
     errorOld = error
-    while(error < tol):
+    while(errorOld > tol):
         weights = addRandomLittleJump(list(weightsOld))
         error = 0
         #Iterate through all the elements in the database and see if the
         #ANN returns 0. Otherwise add the result to the error.
-        for obj in database:
-            error += someNorm(artificialNeuralNetwork(obj, weights))
-
+        for obj in database.datapoints:
+            tmp = (artificialNeuralNetwork(obj.attributes, weights))
+            error += tmp*tmp
         #Make sure it doesn't find conservation laws such as x-x=0.
-        error += c1*howMuchOfATautologyItIs(weights)
+        error += c1*howMuchOfATautologyItIs(database, weights)
 
         if(error<errorOld):
             errorOld = error
+            print error
             weightsOld = list(weights)
-            if(lawGoodEnough(verificationDatabase, weights, c2)):
+            if(lawGoodEnough(weights, verificationDatabase, c2)):
+                #print weights
                 func = translateFromANN2RegularMath(weights)
                 return func
 
@@ -73,13 +76,12 @@ numberOfTestElements = int(n*0.7)
 #Use the rest to make sure that it's a good hypothesis
 numberOfVerificationElements = n- numberOfTestElements
 
-verificationDatabase = database[0:numberOfVerificationElements]
+verificationDatabase = Database(database[0:numberOfVerificationElements])
 database = Database(database[numberOfVerificationElements:n])
 
-print database.datapoints[10].attributes
 #These are NOT correct in any way. Tune them!
 tol = 0.5
 c1 = 1.0
-c2 = 1.0
+c2 = 0.7
 
 print Frank(database, verificationDatabase, tol, c1, c2)

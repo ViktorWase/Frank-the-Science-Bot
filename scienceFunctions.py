@@ -42,7 +42,6 @@ def chooseAttributes(database, n):
         Choose which elements that should be used in the hypothesis.
         This is based on their Pearson r coefficient.
     """
-
     attributes = [False]*n
     for index in range(n*n):
         x = random.randint(0,n-1)
@@ -75,7 +74,6 @@ def randomHypothesis(n, database):
 
         n is the number of inputs of the function.
     """
-    print n
     #Generate the hidden layers!
     #The number of hidden layers is geometrically random
     numHiddenLayers = georand(0.8)
