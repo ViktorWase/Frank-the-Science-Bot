@@ -35,9 +35,9 @@ def lawGoodEnough(w, data, c2):
         return False
 
 def Frank(database, verificationDatabase, tol, c1, c2):
-    exampleObj = database[0]
+    exampleObj = database.datapoints[0]
     #Generate a random function in the form of the parameters to an ANN which returns a single value.
-    weightsOld = randomHypothesis(len(exampleObj.attributes))
+    weightsOld = randomHypothesis(len(exampleObj.attributes), database)
 
     error = 100000000000000;
     errorOld = error
@@ -74,8 +74,9 @@ numberOfTestElements = int(n*0.7)
 numberOfVerificationElements = n- numberOfTestElements
 
 verificationDatabase = database[0:numberOfVerificationElements]
-database = database[numberOfVerificationElements:n]
+database = Database(database[numberOfVerificationElements:n])
 
+print database.datapoints[10].attributes
 #These are NOT correct in any way. Tune them!
 tol = 0.5
 c1 = 1.0

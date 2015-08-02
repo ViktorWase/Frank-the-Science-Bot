@@ -1,5 +1,7 @@
 import random
 
+from r_coefficient import *
+
 def howManyWeightsInTheANN(hiddenLayers, numHiddenLayers, numInputs):
     """
         This calculates how many weights the ANN needs in order
@@ -35,7 +37,31 @@ def someNorm(vector):
         tmpSum = tmpSum + element*element
     return sqrt(tmpSum)
 
-def randomHypothesis(n):
+def chooseAttributes(database, n):
+    """
+        Choose which elements that should be used in the hypothesis.
+        This is based on their Pearson r coefficient.
+    """
+
+    attributes = [False]*n
+    for index in range(n*n):
+        x = random.randint(0,n-1)
+        y = random.randint(0,n-1)
+        if x != y:
+            X = database.getVectorWithAttributeNr(x)
+            Y = database.getVectorWithAttributeNr(y)
+            if(abs(pearson_r_correlation( X ,Y )) > random.random()):
+                if(attributes[x] == False):
+                    attributes[x] = True
+                if(attributes[y] == False):
+                    attributes[y] = True
+
+    #And we add 2 random attributes, just to spice it up
+    attributes[random.randint(0,n-1)] = True
+    attributes[random.randint(0,n-1)] = True
+    return attributes
+
+def randomHypothesis(n, database):
     """
         Returns a set of weights in the form of
         a vector. These are to be used in the ANN.
@@ -43,9 +69,13 @@ def randomHypothesis(n):
         function. But a random ANN is the next best
         thing.
 
+        It uses the Pearson r-correlation coefficient
+        to find out which of the the attributes that
+        might be connected.
+
         n is the number of inputs of the function.
     """
-
+    print n
     #Generate the hidden layers!
     #The number of hidden layers is geometrically random
     numHiddenLayers = georand(0.8)
@@ -57,6 +87,7 @@ def randomHypothesis(n):
     #How many weights are required in the ANN?
     numWeights = howManyWeightsInTheANN(hiddenLayers, numHiddenLayers, n)
 
+
     out = [0.0]*(numWeights+numHiddenLayers+1)
     out[0] = numHiddenLayers
     index = 1
@@ -64,7 +95,19 @@ def randomHypothesis(n):
         out[index] = element
         index += 1
 
-    for i in range(len(out)):
+    #Decide which attributes that are important
+    attributesInHypothesis = chooseAttributes(database, n)
+
+    #Set the first row of the network
+    numWeightsFirstRow = n*hiddenLayers[0]
+    for i in range(hiddenLayers[0]):
+        for j in range(n):
+            if(attributesInHypothesis[j] == True):
+                out[index] = random.gauss(0,10)
+            index += 1
+
+    #And then all of the other rows
+    for i in range(numWeights-numWeightsFirstRow):
         if(random.random()<0.2):
             out[index] = 10.0*random.gauss(0.0,1.0)
         index += 1
