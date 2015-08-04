@@ -42,7 +42,9 @@ def Frank(database, verificationDatabase, tol, c1, c2):
 
     error = 100000000000000
     errorOld = error
-    while(errorOld > tol):
+    iteration = 0
+    while(errorOld > tol and iteration < 50000):
+        iteration += 1
         weights = addRandomLittleJump(list(weightsOld))
         error = 0
         #Iterate through all the elements in the database and see if the
@@ -51,20 +53,35 @@ def Frank(database, verificationDatabase, tol, c1, c2):
             tmp = (artificialNeuralNetwork(obj.attributes, weights))
             error += tmp*tmp
         #Make sure it doesn't find conservation laws such as x-x=0.
-        error += c1*howMuchOfATautologyItIs(database, weights)
+        tmp = howMuchOfATautologyItIs(database, weights)
+        error += c1*tmp*tmp
 
         if(error<errorOld):
             errorOld = error
             print error
+            print iteration
             weightsOld = list(weights)
             if(lawGoodEnough(weights, verificationDatabase, c2)):
                 #print weights
+                print "klar!"
+                print artificialNeuralNetwork([0,0,0], weights)
+                print artificialNeuralNetwork([1,0,0], weights)
+                print artificialNeuralNetwork([0,1,0], weights)
+                print artificialNeuralNetwork([0,0,1], weights)
+                print artificialNeuralNetwork([1,2,0], weights)
+                print artificialNeuralNetwork([1,2,1], weights)
+                print artificialNeuralNetwork([1,2,2], weights)
+
                 func = translateFromANN2RegularMath(weights)
                 return func
 
+
+    return Frank(database, verificationDatabase, tol, c1, c2)
+
+"""
 #Create a simple database with 3 attributes
 #to each of the 20 objects
-database = createSimpleDataSet( 3, 20 )
+database = createSimpleDataSet( 3, 100 )
 
 #Shuffle the database to make sure that
 #everything is nice and random.
@@ -80,8 +97,9 @@ verificationDatabase = Database(database[0:numberOfVerificationElements])
 database = Database(database[numberOfVerificationElements:n])
 
 #These are NOT correct in any way. Tune them!
-tol = 0.5
-c1 = 1.0
-c2 = 0.7
+tol = 0.05
+c1 = 5.0
+c2 = 0.001
 
 print Frank(database, verificationDatabase, tol, c1, c2)
+"""

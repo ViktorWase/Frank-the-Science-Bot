@@ -11,7 +11,7 @@ class Bee:
         These bees try to find the best food source (which is a minima
         of the error function).
     """
-    def __init__(self, generateHypothesis, addRandomLittleJump, fitnessOfHypothesis, isEmployed):
+    def __init__(self, database, generateHypothesis, addRandomLittleJump, fitnessOfHypothesis, isEmployed):
         """
             Constructor for bees.
 
@@ -19,12 +19,14 @@ class Bee:
             problem.
             The last one either sets is to an onlooker or an employed bee.
         """
+
+        self.database = database
         if(isEmployed):
             self.generateHypothesis = generateHypothesis
-            self.bestFoodSource = generateHypothesis()
+            self.bestFoodSource = generateHypothesis(len(database.datapoints[0].attributes),self.database)
             self.addRandomLittleJump = addRandomLittleJump
             self.fitnessOfHypothesis = fitnessOfHypothesis
-            self.valueOfBestFoodSource = fitnessOfHypothesis(self.bestFoodSource)
+            self.valueOfBestFoodSource = fitnessOfHypothesis(database, self.bestFoodSource)
 
             self.isEmployed = True
         else:
@@ -32,13 +34,13 @@ class Bee:
             self.bestFoodSource = None
             self.addRandomLittleJump = addRandomLittleJump
             self.fitnessOfHypothesis = fitnessOfHypothesis
-            self.valueOfBestFoodSource = 0
+            self.valueOfBestFoodSource = -10000000000000000000000
 
             self.isEmployed = False
 
     def goScouting(self):
-        self.bestFoodSource = self.generateHypothesis()
-        self.valueOfBestFoodSource = self.fitnessOfHypothesis(self.bestFoodSource)
+        self.bestFoodSource = self.generateHypothesis(len(self.database.datapoints[0].attributes),self.database)
+        self.valueOfBestFoodSource = self.fitnessOfHypothesis(self.database, self.bestFoodSource)
 
     def isEmployed(self):
         if(self.isEmployed == True):
@@ -56,7 +58,7 @@ class Bee:
             If they're all worse than the one the bee has
             in memory, it does nothing.
         """
-        for i in range(int(len(dancingList)/10)):
+        for i in range(int(len(dancingList)/4)):
             index = random.randint(0, len(dancingList)-1)
             if dancingList[index]>self.valueOfBestFoodSource:
                 self.bestFoodSource = colony[index].bestFoodSource
@@ -67,8 +69,8 @@ class Bee:
             Checks if a food source close by is better. If it is better
             the bee goes there instead.
         """
-        neighbour = self.addRandomLittleJump(self.bestFoodSource)
-        valueOfNeighbour = self.fitnessOfHypothesis(neighbour)
+        neighbour = self.addRandomLittleJump(list(self.bestFoodSource))
+        valueOfNeighbour = self.fitnessOfHypothesis(self.database, neighbour)
         if(valueOfNeighbour > self.valueOfBestFoodSource):
             self.valueOfBestFoodSource = valueOfNeighbour
             self.bestFoodSource = neighbour
@@ -77,19 +79,21 @@ class Colony:
     """
         This is a colony of Bees.
     """
-    def __init__(self, numOfEmployedBees, numOfOnlookers, randomHypothesis, addRandomLittleJump, fitnessOfHypothesis):
+    def __init__(self, database, numOfEmployedBees, numOfOnlookers, randomHypothesis, addRandomLittleJump, fitnessOfHypothesis):
         self.colony = []
         self.dancingList = []
         self.size = numOfOnlookers + numOfEmployedBees
         self.numOfEmployedBees = numOfEmployedBees
         self.numOfOnlookers = numOfOnlookers
 
+        self.database = database
+
         for i in range(numOfEmployedBees):
-            bee = Bee(randomHypothesis, addRandomLittleJump, fitnessOfHypothesis, True)
+            bee = Bee(database, randomHypothesis, addRandomLittleJump, fitnessOfHypothesis, True)
             self.colony.append(bee)
 
         for i in range(numOfOnlookers):
-            bee = Bee(randomHypothesis, addRandomLittleJump, fitnessOfHypothesis, False)
+            bee = Bee(database, randomHypothesis, addRandomLittleJump, fitnessOfHypothesis, False)
             self.colony.append(bee)
 
 
@@ -150,13 +154,13 @@ class Colony:
         """
             Returns the best bee.
         """
-        maxVal = -1
-        bestBee = None
+        maxVal = -10000000000000000000
+        bestBee = self.colony[0].bestFoodSource
         for bee in self.colony:
-            if(bee.valueOfBestFoodSource > maxVal):
+            if(bee.valueOfBestFoodSource >= maxVal):
                 maxVal = bee.valueOfBestFoodSource
                 bestBee = bee
-        return bee.bestFoodSource
+        return bestBee.bestFoodSource
 
     def doAnItteration(self):
         """
@@ -174,7 +178,7 @@ class Colony:
         """
         for itteration in range(maxNumberOfItterations):
             self.doAnItteration()
-            #print self.bestBee()
+            print self.colony[0].fitnessOfHypothesis(self.database, self.bestBee())
             #print ""
         return self.bestBee()
 
@@ -192,9 +196,9 @@ def mutate(x):
     return x+random.random()-0.5
 
 #How you start it.
-colony = Colony(20,20, hyp, mutate, fit)
-bestSolution = colony.findBestFlower(500)
-print "x: ",
-print bestSolution
-print "Fitness(x): ",
-print fit(bestSolution)
+#colony = Colony(20,20, hyp, mutate, fit)
+#bestSolution = colony.findBestFlower(500)
+#print "x: ",
+#rint bestSolution
+#print "Fitness(x): ",
+#print fit(bestSolution)

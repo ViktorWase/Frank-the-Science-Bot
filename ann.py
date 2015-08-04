@@ -4,10 +4,10 @@ from math import exp
 
 import scienceFunctions
 
-def sigmoidFunc2(x):
+def sigmoidFunc(x):
         return x/(1.0+fabs(x))
 
-def sigmoidFunc(x):
+def sigmoidFunc2(x):
         return 1.0/(1.0+exp(-x))-0.5
 
 def isCorrectLength(obj,weights):

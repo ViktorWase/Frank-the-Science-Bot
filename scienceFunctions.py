@@ -123,5 +123,5 @@ def addRandomLittleJump(w):
     for index in range(len(w)-counter):
         #Try to keep the hypothesis sparse.
         if(w[index+counter] != 0 or random.random() < 0.05):
-            out[index+counter] += random.gauss(0.0, 0.05)
+            out[index+counter] += random.gauss(0.0, 0.005)
     return out
