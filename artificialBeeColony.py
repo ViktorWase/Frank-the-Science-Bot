@@ -201,7 +201,7 @@ class Colony:
             print self.bestBee().hypothesis.getFitness()
             #print self.colony[0].fitnessOfHypothesis(self.database, self.bestBee())
             #print ""
-        return self.bestBee()
+        return self.bestBee().hypothesis
 
 #These are just example functions. Use the fancy ones
 #from scienceFunction.py instead.

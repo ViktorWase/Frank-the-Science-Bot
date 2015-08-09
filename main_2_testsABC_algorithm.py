@@ -18,18 +18,18 @@ def getHypObj(database):
 def FrankABC(database, verificationDatabase):
 
     colony = Colony(database, 30,30, getHypObj)
-    bestBee = colony.findBestFlower(100)
+    bestHyp = colony.findBestFlower(100)
     #print "x: ",
 
     print "klar!"
 
-    print bestBee.hypothesis.function([0,0,0])
-    print bestBee.hypothesis.function([1,0,0])
-    print bestBee.hypothesis.function([0,1,0])
-    print bestBee.hypothesis.function([0,0,1])
-    print bestBee.hypothesis.function([1,2,0])
-    print bestBee.hypothesis.function([1,2,1])
-    print bestBee.hypothesis.function([1,2,2])
+    print bestHyp.function([0,0,0])
+    print bestHyp.function([1,0,0])
+    print bestHyp.function([0,1,0])
+    print bestHyp.function([0,0,1])
+    print bestHyp.function([1,2,0])
+    print bestHyp.function([1,2,1])
+    print bestHyp.function([1,2,2])
 
 
 
