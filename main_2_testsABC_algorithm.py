@@ -21,7 +21,7 @@ def FrankABC(database, verificationDatabase):
     bestHyp = colony.findBestFlower(100)
     #print "x: ",
 
-    print "Klar! (och John är dum!)"
+    print "Klar!"
 
     print bestHyp.function([0,0,0])
     print bestHyp.function([1,0,0])
@@ -69,4 +69,4 @@ tol = 0.05
 c1 = 5.0
 c2 = 0.001
 
-print FrankABC(database, verificationDatabase)
+FrankABC(database, verificationDatabase)

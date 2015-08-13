@@ -1,6 +1,6 @@
 #import random
 from random import gauss
-from ann import *
+#from ann import *
 def howMuchOfATautologyItIs(database,hyp):
     out = 0.0
     n = database.numAttributes
