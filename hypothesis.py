@@ -1,6 +1,7 @@
 import ann
 import rbf
 from tautology import *
+from scienceFunctions import *
 
 class Hypothesis:
     """

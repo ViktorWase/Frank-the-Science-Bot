@@ -6,6 +6,9 @@ from scienceFunctions import *
 from hypothesis import *
 from simpleDatabase import *
 from main import *
+from nonparametricDistribution import *
+
+from annmath import *
 
 def getHypObj(database):
     chosen = chooseAttributes(database, database.numAttributes)
@@ -17,8 +20,8 @@ def getHypObj(database):
 
 def FrankABC(database, verificationDatabase):
 
-    colony = Colony(database, 30,30, getHypObj)
-    bestHyp = colony.findBestFlower(100)
+    colony = Colony(database, 10,10, getHypObj)
+    bestHyp = colony.findBestFlower(10)
     #print "x: ",
 
     print "Klar!"
@@ -43,7 +46,7 @@ def FrankABC(database, verificationDatabase):
     print artificialNeuralNetwork([1,2,2], weights)
     #print fit(bestSolution)
     """
-
+    return bestHyp
 
 
 
@@ -53,7 +56,7 @@ database = createSimpleDataSet( 3, 100 )
 
 #Shuffle the database to make sure that
 #everything is nice and random.
-random.shuffle(database)
+#random.shuffle(database)
 
 n=len(database)
 #Use 70% of the database to create the hypothesis
@@ -69,4 +72,8 @@ tol = 0.05
 c1 = 5.0
 c2 = 0.001
 
-FrankABC(database, verificationDatabase)
+hyp=FrankABC(database, verificationDatabase)
+
+#annm = ANNMath(hyp)
+# find approximation
+#annm.approx()
